@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 using PubAPI;
 using PublisherData;
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<PubContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("PubConnection"))
 .EnableSensitiveDataLogging()
 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
+
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
 
 var app = builder.Build();
 

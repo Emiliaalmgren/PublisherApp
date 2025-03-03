@@ -7,13 +7,13 @@ namespace PubAPI;
 
 public static class AuthorEndpoints
 {
-    public static void MapAuthorEndpoints (this IEndpointRouteBuilder routes)
+    public static void MapAuthorEndpoints(this IEndpointRouteBuilder routes)
     {
         var group = routes.MapGroup("/api/Author").WithTags(nameof(Author));
 
         group.MapGet("/", async (PubContext db) =>
         {
-            return await db.Authors.AsNoTracking().ToListAsync();
+            return await db.Authors.Include(a => a.Books).AsNoTracking().ToListAsync();
         })
         .WithName("GetAllAuthors")
         .WithOpenApi();
